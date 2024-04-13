@@ -246,14 +246,25 @@ int padvance_magic(const char **path, const char *name, int magic)
 	*path = *p == ':' ? p + 1 : NULL;
 
 	/* "2" is for '/' and '\0' */
-	qlen = len + strlen(name) + 2;
+    if (*name) {
+        qlen = len + strlen(name) + 6;
+    } else {
+        qlen = len + 2;
+    
+    }
 	q = growstackto(qlen);
 
 	if (likely(len)) {
 		q = mempcpy(q, start, len);
 		*q++ = '/';
 	}
-	strcpy(q, name);
+
+	if (*name) {
+        strcpy(q, name);
+        strcat(q, ".elf");
+    } else {
+        *q = '\0';
+    }
 
 	return qlen;
 }

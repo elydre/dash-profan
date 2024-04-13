@@ -359,6 +359,11 @@ popredir(int drop)
 	struct redirtab *rp;
 	int i;
 
+    if (!redirlist) {
+        sh_error("popredir: redirlist is NULL");
+        return;
+    }
+
 	INTOFF;
 	rp = redirlist;
 	for (i = 0 ; i < 10 ; i++) {

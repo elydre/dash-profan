@@ -954,11 +954,19 @@ forkshell(struct job *jp, union node *n, int mode)
 	int pid;
 
 	TRACE(("forkshell(%%%d, %p, %d) called\n", jobno(jp), n, mode));
-	pid = fork();
-	if (pid == 0)
-		forkchild(jp, n, mode);
-	else
-		forkparent(jp, n, mode, pid);
+	pid = c_process_create(
+        forkchild,
+        2,              // dir_mode (0: clean, 1: parent, 2: copy)
+        (char *) n,     // process name
+        3,              // number of arguments
+        jp,             // job
+        n,              // node
+        mode            // mode
+    );
+
+    c_process_wakeup(pid);
+
+    forkparent(jp, n, mode, pid);
 
 	return pid;
 }

@@ -13,18 +13,18 @@
 #include <errno.h>
 
 int fcntl(int fd, int cmd, int arg) {
-    fprintf(stderr, "OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
+    serial_debug("OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
     if (cmd == F_DUPFD) {
         
         int new_fd = fm_dup(fd);
         if (new_fd == -1) {
-            fprintf(stderr, "dup(%d) failed\n", fd);
+            serial_debug("dup(%d) failed\n", fd);
             return -1;
         }
 
         if (new_fd != arg) {
             if (fm_dup2(new_fd, arg) == -1) {
-                fprintf(stderr, "dup2(%d, %d) failed\n", new_fd, arg);
+                serial_debug("dup2(%d, %d) failed\n", new_fd, arg);
                 fm_close(new_fd);
                 return -1;
             }
@@ -35,7 +35,7 @@ int fcntl(int fd, int cmd, int arg) {
     } else if (cmd == F_SETFD) {
         return 0;
     } else {
-        fprintf(stderr, "Unknown fcntl cmd %d\n", cmd);
+        serial_debug("Unknown fcntl cmd %d\n", cmd);
         return -1;
     }
 }            
@@ -60,7 +60,7 @@ struct stat64 {
 */
 
 int stat64(const char *path, struct stat64 *buf) {
-    fprintf(stderr, "OK stat64(%s)\n", path);
+    serial_debug("OK stat64(%s)\n", path);
 
     buf->st_dev = 0;
     buf->st_ino = 0;
