@@ -975,6 +975,7 @@ void vforkexec_subprocess(union node *n, char **argv, const char *path, int idx,
 {
     forkchild(jp, n, FORK_FG);
     sigclearmask();
+    c_process_wakeup(c_process_get_ppid(c_process_get_pid()));
     shellexec(argv, path, idx);
 }
 
@@ -1000,7 +1001,7 @@ struct job *vforkexec(union node *n, char **argv, const char *path, int idx)
         jp              // job
     );
 
-    c_process_wakeup(pid);
+    c_process_handover(pid);
 
     vforked = 0;
 	sigclearmask();

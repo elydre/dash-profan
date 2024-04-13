@@ -232,7 +232,7 @@ setsignal(int signo)
 			 */
 			return;
 		}
-		if (act.sa_handler == SIG_IGN) {
+		if (act.sa_handler == (void (*)(int)) SIG_IGN) {
 			if (mflag && (signo == SIGTSTP ||
 			     signo == SIGTTIN || signo == SIGTTOU)) {
 				tsig = S_IGN;	/* don't hard ignore these */
@@ -249,7 +249,7 @@ setsignal(int signo)
 		act.sa_handler = onsig;
 		break;
 	case S_IGN:
-		act.sa_handler = SIG_IGN;
+		act.sa_handler = (void (*)(int)) SIG_IGN;
 		break;
 	default:
 		act.sa_handler = SIG_DFL;

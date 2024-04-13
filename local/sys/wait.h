@@ -17,7 +17,7 @@
 #define WSTOPSIG(status) (1)
 
 // WIFSTOPPED
-#define WIFSTOPPED(status) (1)
+#define WIFSTOPPED(status) (0)
 
 // WTERMSIG
 #define WTERMSIG(status) (1)
