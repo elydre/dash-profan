@@ -15,7 +15,7 @@
 #define HAVE_DECL_ISBLANK 0
 
 /* Define to 0 if you have the `faccessat' function. */
-#define HAVE_FACCESSAT 0
+// #define HAVE_FACCESSAT 0
 
 /* Define to 0 if you have the `fnmatch' function. */
 /* #undef HAVE_FNMATCH */
@@ -84,7 +84,7 @@
 #define HAVE_STRTOUMAX 0
 
 /* Define if your `struct stat' has `st_mtim' */
-#define HAVE_ST_MTIM 0
+// #define HAVE_ST_MTIM 1
 
 /* Define to 0 if you have the `sysconf' function. */
 #define HAVE_SYSCONF 0
