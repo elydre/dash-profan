@@ -1218,17 +1218,21 @@ waitproc(int block, int *status)
 
 	return err;*/
 
-    int *pids = malloc(sizeof(int) * 100);
+    int pid, *pids = malloc(sizeof(int) * 100);
     int count = c_process_generate_pid_list(pids, 100);
     int current_pid = c_process_get_pid();
 
     for (int i = 0; i < count; i++) {
-        if (c_process_get_ppid(pids[i]) == current_pid) {
-            int return_code = profan_wait_pid(pids[i]);
-            *status = return_code;
-            count = pids[i];
+        pid = pids[i];
+        if (c_process_get_ppid(pid) == current_pid) {
             free(pids);
-            return count;
+
+            while (c_process_get_state(pid) < 4)
+                c_process_sleep(current_pid, 10);
+
+            *status = c_process_get_info(pid, PROCESS_INFO_EXIT_CODE);
+
+            return pid;
         }
     }
     free(pids);
