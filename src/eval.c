@@ -542,6 +542,27 @@ expredir(union node *n)
  * of all the rest.)
  */
 
+#include <profan/syscall.h>
+
+void forkparent(struct job *jp, union node *n, int mode, pid_t pid);
+void forkchild(struct job *jp, union node *n, int mode);
+
+void evalpipe_child(struct job *jp, union node *n, int mode, int pip[2], int flags, int prevfd)
+{
+    forkchild(jp, n, mode);
+    INTON;
+    if (prevfd > 0) {
+        dup2(prevfd, 0);
+        close(prevfd);
+    }
+    if (pip[1] > 1) {
+        dup2(pip[1], 1);
+        close(pip[1]);
+    }
+    c_process_wakeup(c_process_get_ppid(c_process_get_pid()));
+    evaltreenr(n, flags);
+}
+
 STATIC int
 evalpipe(union node *n, int flags)
 {
@@ -569,26 +590,26 @@ evalpipe(union node *n, int flags)
 				sh_error("Pipe call failed");
 			}
 		}
-		if (forkshell(jp, lp->n, n->npipe.backgnd) == 0) {
-			INTON;
-			if (pip[1] >= 0) {
-				close(pip[0]);
-			}
-			if (prevfd > 0) {
-				dup2(prevfd, 0);
-				close(prevfd);
-			}
-			if (pip[1] > 1) {
-				dup2(pip[1], 1);
-				close(pip[1]);
-			}
-			evaltreenr(lp->n, flags);
-			/* never returns */
+		{
+            int pid = c_process_create(
+                evalpipe_child,
+                2,              // dir_mode (0: clean, 1: parent, 2: copy)
+                (char *) n,     // process name
+                7,              // agument count
+                jp,             // argument 1
+                lp->n,          // argument 2
+                n->npipe.backgnd,   // argument 3
+                pip,            // argument 4
+                flags,          // argument 5
+                prevfd          // argument 6
+            );
+            c_process_handover(pid);
+            forkparent(jp, lp->n, n->npipe.backgnd, pid);
 		}
-		if (prevfd >= 0)
-			close(prevfd);
+		// if (prevfd >= 0)
+		//	close(prevfd);
 		prevfd = pip[0];
-		close(pip[1]);
+		// close(pip[1]);
 	}
 	if (n->npipe.backgnd == 0) {
 		status = waitforjob(jp);

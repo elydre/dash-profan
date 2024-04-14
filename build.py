@@ -5,7 +5,7 @@ LD      = "ld"
 
 OUTPUT  = "dash"
 
-CFLAGS  = "-DHAVE_CONFIG_H -Isrc -include config.h -DSHELL -ffreestanding -fno-exceptions -m32 -Ilocal -Iprofan_zlib -nostdinc -fno-stack-protector"
+CFLAGS  = "-DHAVE_CONFIG_H -Isrc -include config.h -DSHELL -ffreestanding -fno-exceptions -m32 -Ilocal -Iprofan_zlib -nostdinc -fno-stack-protector -DJOBS=0"
 LDFLAGS = "-nostdlib -T link.ld -z max-page-size=0x1000 -L/home/pf4/Documents/GitHub/profanOS/out/zlibs/ -lc"
 
 OBJDIR  = "build"

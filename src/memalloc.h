@@ -36,6 +36,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 struct stackmark {
 	struct stack_block *stackp;
@@ -98,4 +99,9 @@ static inline char *_STPUTC(int c, char *p) {
 #define ungrabstackstr(s, p) stunalloc((s))
 #define stackstrend() ((void *)sstrend)
 
-#define ckfree(p)	free((pointer)(p))
+extern int rootpid;
+
+#define ckfree(p) do { \
+    if (getpid() == rootpid) \
+        free((pointer)(p)); \
+} while (0)

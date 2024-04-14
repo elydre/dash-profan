@@ -111,8 +111,6 @@ STATIC int sprint_status(char *, int, int);
 STATIC void freejob(struct job *);
 STATIC struct job *getjob(const char *, int);
 STATIC struct job *growjobtab(void);
-STATIC void forkchild(struct job *, union node *, int);
-STATIC void forkparent(struct job *, union node *, int, pid_t);
 STATIC int dowait(int, struct job *);
 #ifdef SYSV
 STATIC int onsigchild(void);
@@ -848,7 +846,7 @@ growjobtab(void)
  * Called with interrupts off.
  */
 
-static void forkchild(struct job *jp, union node *n, int mode)
+void forkchild(struct job *jp, union node *n, int mode)
 {
 	int lvforked;
 	int oldlvl;
@@ -904,12 +902,13 @@ static void forkchild(struct job *jp, union node *n, int mode)
 
 	if (lvforked)
 		return;
-
+/*
 	for (jp = curjob; jp; jp = jp->prev_job)
 		freejob(jp);
+*/
 }
 
-static void forkparent(struct job *jp, union node *n, int mode, pid_t pid)
+void forkparent(struct job *jp, union node *n, int mode, pid_t pid)
 {
 	if (pid < 0) {
 		TRACE(("Fork failed, errno=%d", errno));
@@ -951,6 +950,8 @@ static void forkparent(struct job *jp, union node *n, int mode, pid_t pid)
 int
 forkshell(struct job *jp, union node *n, int mode)
 {
+    sh_error("forkshell() is not implemented");
+    while (1);
 	int pid;
 
 	TRACE(("forkshell(%%%d, %p, %d) called\n", jobno(jp), n, mode));
@@ -1225,7 +1226,7 @@ waitproc(int block, int *status)
     for (int i = 0; i < count; i++) {
         pid = pids[i];
         if (c_process_get_ppid(pid) == current_pid) {
-            free(pids);
+            ckfree(pids);
 
             while (c_process_get_state(pid) < 4)
                 c_process_sleep(current_pid, 10);
@@ -1235,7 +1236,7 @@ waitproc(int block, int *status)
             return pid;
         }
     }
-    free(pids);
+    ckfree(pids);
 
     return -1;
 }
