@@ -630,6 +630,23 @@ evalpipe(union node *n, int flags)
  */
 
 void
+evalbackcmd_child(struct job *jp, union node *n, int pip[2])
+{
+    forkchild(jp, n, FORK_NOJOB);
+
+    FORCEINTON;
+    // close(pip[0]);
+    if (pip[1] != 1) {
+        dup2(pip[1], 1);
+        close(pip[1]);
+    }
+    // ifsfree();
+    c_process_wakeup(c_process_get_ppid(c_process_get_pid()));
+    evaltreenr(n, EV_EXIT);
+    /* NOTREACHED */
+}
+
+void
 evalbackcmd(union node *n, struct backcmd *result)
 {
 	int pip[2];
@@ -646,17 +663,19 @@ evalbackcmd(union node *n, struct backcmd *result)
 	if (pipe(pip) < 0)
 		sh_error("Pipe call failed");
 	jp = makejob(n, 1);
-	if (forkshell(jp, n, FORK_NOJOB) == 0) {
-		FORCEINTON;
-		close(pip[0]);
-		if (pip[1] != 1) {
-			dup2(pip[1], 1);
-			close(pip[1]);
-		}
-		ifsfree();
-		evaltreenr(n, EV_EXIT);
-		/* NOTREACHED */
-	}
+	{
+        int pid = c_process_create(
+            evalbackcmd_child,
+            2,              // dir_mode (0: clean, 1: parent, 2: copy)
+            (char *) n,     // process name
+            3,              // agument count
+            jp,             // argument 1
+            n,              // argument 2
+            pip             // argument 3
+        );
+        c_process_handover(pid);
+        forkparent(jp, n, 0, pid);
+    }
 	close(pip[1]);
 	result->fd = pip[0];
 	result->jp = jp;

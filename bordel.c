@@ -38,7 +38,7 @@ int fcntl(int fd, int cmd, int arg) {
         serial_debug("Unknown fcntl cmd %d\n", cmd);
         return -1;
     }
-}            
+}
 
 
 /*
@@ -107,6 +107,7 @@ int stat64(const char *path, struct stat64 *buf) {
 }
 
 intmax_t strtoimax(const char *nptr, char **endptr, int base) {
+    serial_debug("strtoimax(%s, %d)\n", nptr, base);
     return (intmax_t) strtol(nptr, endptr, base);
 }
 
