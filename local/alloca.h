@@ -1,8 +1,16 @@
-#ifndef ALLOCA_H
-#define ALLOCA_H
+#ifndef	_ALLOCA_H
+#define	_ALLOCA_H	1
 
 #include <stddef.h>
 
-void *alloca(size_t size);
+/* Remove any previous definition.  */
+#undef	alloca
 
-#endif // ALLOCA_H
+/* Allocate a block that will be freed when the calling function exits.  */
+extern void *alloca (size_t __size);
+
+#ifdef	__GNUC__
+# define alloca(size)	__builtin_alloca (size)
+#endif /* GCC.  */
+
+#endif /* alloca.h */
