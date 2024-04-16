@@ -1,0 +1,40 @@
+name: build dash
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      
+    - name: install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc make python3
+
+    - name: build profanOS disk
+      run: |
+        git clone https://github.com/elydre/profanOS.git
+        cd profanOS
+        make disk
+        cd ..
+      
+    - name: build dash
+      run: |
+        bash getlib.sh
+        python3 build.py profanOS
+
+    - name: Release to GitHub
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        title: "dash for profanOS"
+        automatic_release_tag: latest
+        repo_token: "${{ secrets.GIT_TOKEN }}"
+        prerelease: false
+        files: |
+          dash.elf

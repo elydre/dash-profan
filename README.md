@@ -19,7 +19,7 @@ cd ~/path/to/dash
 sh getlib.sh
 
 # build dash
-python build.py
+python build.py /path/to/profanOS
 
 # copy the binary to profanOS filesystem
 cp dash ~/path/to/profanOS/out/zapps/fatpath/
