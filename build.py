@@ -12,7 +12,7 @@ LD      = "ld"
 
 OUTPUT  = "dash"
 
-CFLAGS  = "-DHAVE_CONFIG_H -Isrc -include config.h -DSHELL -ffreestanding -fno-exceptions -m32 -Ilocal -Iprofan_zlib -nostdinc -fno-stack-protector -DJOBS=0"
+CFLAGS  = "-DHAVE_CONFIG_H -Isrc -include config.h -DSHELL -ffreestanding -fno-exceptions -m32 -Ilocal -Iprofan_zlib -nostdinc -fno-stack-protector -DJOBS=0 -O1"
 LDFLAGS = f"-nostdlib -T link.ld -z max-page-size=0x1000 -L{profan_path}/out/zlibs -lc"
 
 OBJDIR  = "build"
