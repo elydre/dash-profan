@@ -1,3 +1,14 @@
+/*****************************************************************************\
+|   === stdio.h : 2024 ===                                                    |
+|                                                                             |
+|    Implementation of the stdio.h header file from libC           .pi0iq.    |
+|                                                                 d"  . `'b   |
+|    This file is part of profanOS and is released under          q. /|\  "   |
+|    the terms of the GNU General Public License                   `// \\     |
+|                                                                  //   \\    |
+|   === elydre : https://github.com/elydre/profanOS ===         #######  \\   |
+\*****************************************************************************/
+
 #ifndef STDIO_H
 #define STDIO_H
 
@@ -5,9 +16,15 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#define stdin  (FILE *) 3
-#define stdout (FILE *) 1
-#define stderr (FILE *) 2
+// standard streams
+extern FILE *stdin;
+extern FILE *stdout;
+extern FILE *stderr;
+
+// make old C revisions happy
+#define stdin stdin
+#define stdout stdout
+#define stderr stderr
 
 #define _IOFBF 0
 #define _IOLBF 1
