@@ -12,8 +12,8 @@ LD      = "ld"
 
 OUTPUT  = "dash"
 
-CFLAGS  = "-DHAVE_CONFIG_H -Isrc -include config.h -DSHELL -ffreestanding -fno-exceptions -m32 -Ilocal -Iprofan_zlib -nostdinc -fno-stack-protector -DJOBS=0 -O1"
-LDFLAGS = f"-nostdlib -T link.ld -z max-page-size=0x1000 -L{profan_path}/out/zlibs -lc"
+CFLAGS  = "-DHAVE_CONFIG_H -Isrc -include config.h -DSHELL -ffreestanding -fno-exceptions -m32 -Ilocal -Iprofan_zlib -nostdinc -fno-stack-protector -DJOBS=0"
+LDFLAGS = f"-nostdlib -T link.ld -L{profan_path}/out/zlibs -lc"
 
 OBJDIR  = "build"
 SRCDIR  = ["src", "src/bltin"]
@@ -32,7 +32,7 @@ def compile_file(src, dir):
     return obj
 
 def link_files(entry, objs, output = OUTPUT):
-    execute_command(f"{LD} {LDFLAGS} -o {output}.elf {entry} {' '.join(objs)} libtcc.a")
+    execute_command(f"{LD} {LDFLAGS} -o {output}.elf {entry} {' '.join(objs)} libgcc.a")
 
 def main():
     execute_command(f"mkdir -p {OBJDIR}")

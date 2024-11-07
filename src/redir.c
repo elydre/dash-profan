@@ -359,11 +359,6 @@ popredir(int drop)
 	struct redirtab *rp;
 	int i;
 
-    if (!redirlist) {
-        sh_error("popredir: redirlist is NULL");
-        return;
-    }
-
 	INTOFF;
 	rp = redirlist;
 	for (i = 0 ; i < 10 ; i++) {
@@ -422,13 +417,20 @@ FORKRESET {
 int
 savefd(int from, int ofd)
 {
-	int ret, newfd = dup(from);
-    if (newfd < 10) {
-        ret = savefd(newfd, ofd);
-        close(newfd);
-        close(ofd);
-        return ret;
-    }
+	int newfd;
+	int err;
+
+	newfd = fcntl(from, F_DUPFD, 10);
+	err = newfd < 0 ? errno : 0;
+	if (err != EBADF) {
+		close(ofd);
+		if (err)
+			sh_error("%d: %s", from, strerror(err));
+		else
+			fcntl(newfd, F_SETFD, FD_CLOEXEC);
+	}
+
+	return newfd;
 }
 
 

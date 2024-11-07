@@ -6,7 +6,7 @@
 #define PATH_MAX 4096
 #define NAME_MAX 255
 
-#define open64(path, flags, ...) profan_open((char *) (path), (flags), ##__VA_ARGS__)
+#define open64(path, flags, ...) open(path, flags, ##__VA_ARGS__)
 
 // ino_t
 typedef unsigned long ino_t;

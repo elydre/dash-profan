@@ -111,6 +111,8 @@ STATIC int sprint_status(char *, int, int);
 STATIC void freejob(struct job *);
 STATIC struct job *getjob(const char *, int);
 STATIC struct job *growjobtab(void);
+STATIC void forkchild(struct job *, union node *, int);
+STATIC void forkparent(struct job *, union node *, int, pid_t);
 STATIC int dowait(int, struct job *);
 #ifdef SYSV
 STATIC int onsigchild(void);
@@ -846,7 +848,7 @@ growjobtab(void)
  * Called with interrupts off.
  */
 
-void forkchild(struct job *jp, union node *n, int mode)
+static void forkchild(struct job *jp, union node *n, int mode)
 {
 	int lvforked;
 	int oldlvl;
@@ -902,13 +904,12 @@ void forkchild(struct job *jp, union node *n, int mode)
 
 	if (lvforked)
 		return;
-/*
+
 	for (jp = curjob; jp; jp = jp->prev_job)
 		freejob(jp);
-*/
 }
 
-void forkparent(struct job *jp, union node *n, int mode, pid_t pid)
+static void forkparent(struct job *jp, union node *n, int mode, pid_t pid)
 {
 	if (pid < 0) {
 		TRACE(("Fork failed, errno=%d", errno));
@@ -950,16 +951,16 @@ void forkparent(struct job *jp, union node *n, int mode, pid_t pid)
 int
 forkshell(struct job *jp, union node *n, int mode)
 {
-    sh_error("forkshell() is not implemented");
-    return 0;
-}
+	int pid;
 
-void vforkexec_subprocess(union node *n, char **argv, const char *path, int idx, struct job *jp)
-{
-    forkchild(jp, n, FORK_FG);
-    sigclearmask();
-    c_process_wakeup(c_process_get_ppid(c_process_get_pid()));
-    shellexec(argv, path, idx);
+	TRACE(("forkshell(%%%d, %p, %d) called\n", jobno(jp), n, mode));
+	pid = fork();
+	if (pid == 0)
+		forkchild(jp, n, mode);
+	else
+		forkparent(jp, n, mode, pid);
+
+	return pid;
 }
 
 struct job *vforkexec(union node *n, char **argv, const char *path, int idx)
@@ -972,21 +973,16 @@ struct job *vforkexec(union node *n, char **argv, const char *path, int idx)
 	sigblockall(NULL);
 	vforked++;
 
-    pid = c_process_create(
-        vforkexec_subprocess,
-        2,              // dir_mode (0: clean, 1: parent, 2: copy)
-        (char *) path,  // process name
-        5,              // number of arguments
-        n,              // node
-        argv,           // arguments
-        path,           // path
-        idx,            // index
-        jp              // job
-    );
+	pid = vfork();
 
-    c_process_handover(pid);
+	if (!pid) {
+		forkchild(jp, n, FORK_FG);
+		sigclearmask();
+		shellexec(argv, path, idx);
+		/* NOTREACHED */
+	}
 
-    vforked = 0;
+	vforked = 0;
 	sigclearmask();
 	forkparent(jp, n, FORK_FG, pid);
 
@@ -1202,18 +1198,18 @@ waitproc(int block, int *status)
 	return err;*/
 
     int pid, *pids = malloc(sizeof(int) * 100);
-    int count = c_process_generate_pid_list(pids, 100);
-    int current_pid = c_process_get_pid();
+    int count = syscall_process_list_all(pids, 100);
+    int current_pid = syscall_process_pid();
 
     for (int i = 0; i < count; i++) {
         pid = pids[i];
-        if (c_process_get_ppid(pid) == current_pid) {
+        if (syscall_process_ppid(pid) == current_pid) {
             ckfree(pids);
 
-            while (c_process_get_state(pid) < 4)
-                c_process_sleep(current_pid, 10);
+            while (syscall_process_state(pid) < 4)
+                syscall_process_sleep(current_pid, 10);
 
-            *status = c_process_get_info(pid, PROCESS_INFO_EXIT_CODE);
+            *status = syscall_process_info(pid, PROCESS_INFO_EXIT_CODE);
 
             return pid;
         }

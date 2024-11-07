@@ -8,11 +8,17 @@
 
 #include <profan/filesys.h>
 #include <profan/syscall.h>
+#include <profan.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 
-int fcntl(int fd, int cmd, int arg) {
+int fcntl(int fd, int cmd, ...) {
+    va_list ap;
+    va_start(ap, cmd);
+    int arg = va_arg(ap, int);
+    va_end(ap);
+
     serial_debug("OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
     if (cmd == F_DUPFD) {
         
@@ -80,15 +86,15 @@ int stat64(const char *path, struct stat64 *buf) {
     if (pwd == NULL) pwd = "/";
     char *full_path = assemble_path(pwd, (char *) path);
 
-    sid_t sid = fu_path_to_sid(ROOT_SID, full_path);
+    uint32_t sid = fu_path_to_sid(ROOT_SID, full_path);
     free(full_path);
 
-    if (IS_NULL_SID(sid)) {
+    if (IS_SID_NULL(sid)) {
         errno = ENOENT;
         return -1;
     }
 
-    buf->st_dev = sid.device;
+    buf->st_dev = SID_DISK(sid);
     
     if (fu_is_file(sid)) {
         buf->st_mode = S_IFREG;
@@ -99,7 +105,7 @@ int stat64(const char *path, struct stat64 *buf) {
     }
     buf->st_mode |= 00777;
 
-    buf->st_size = c_fs_cnt_get_size(c_fs_get_main(), sid);
+    buf->st_size = syscall_fs_get_size(NULL, sid);
     buf->st_blksize = 512;
     buf->st_blocks = (buf->st_size + 511) / 512;
 

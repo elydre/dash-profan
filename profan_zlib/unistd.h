@@ -117,7 +117,8 @@ int ttyname_r(int a, char *b, size_t c);
 useconds_t ualarm(useconds_t a, useconds_t b);
 int unlink(const char *a);
 int usleep(useconds_t usec);
-pid_t vfork(void);
+// pid_t vfork(void);
+#define vfork fork
 ssize_t write(int fd, const void *buf, size_t count);
 
 #endif

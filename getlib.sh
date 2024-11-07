@@ -1,1 +1,1 @@
-wget https://github.com/elydre/tinycc-profan/releases/download/latest/libtcc.a
+wget https://github.com/elydre/libatron/releases/download/latest/libgcc.a
