@@ -1,7 +1,7 @@
 /*****************************************************************************\
-|   === setjmp.h : 2024 ===                                                   |
+|   === alloca.h : 2024 ===                                                   |
 |                                                                             |
-|    Implementation of the setjmp.h header file from libC          .pi0iq.    |
+|    Implementation of the alloca.h header file                    .pi0iq.    |
 |                                                                 d"  . `'b   |
 |    This file is part of profanOS and is released under          q. /|\  "   |
 |    the terms of the GNU General Public License                   `// \\     |
@@ -9,12 +9,17 @@
 |   === elydre : https://github.com/elydre/profanOS ===         #######  \\   |
 \*****************************************************************************/
 
-#ifndef SETJMP_H
-#define SETJMP_H
+#ifndef ALLOCA_H
+#define ALLOCA_H
 
-typedef int jmp_buf[6];
+#include <stddef.h>
 
-int setjmp(jmp_buf var);
-void longjmp(jmp_buf var, int m) __attribute__((noreturn));
+#undef alloca
+
+void *alloca(size_t size);
+
+#ifdef __GNUC__ // GCC
+#define alloca(size) __builtin_alloca(size)
+#endif
 
 #endif

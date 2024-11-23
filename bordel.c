@@ -10,8 +10,13 @@
 #include <profan/syscall.h>
 #include <profan.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
+
+void _exit(int a) {
+    exit(a);
+}
 
 int fcntl(int fd, int cmd, ...) {
     va_list ap;
@@ -22,19 +27,19 @@ int fcntl(int fd, int cmd, ...) {
     serial_debug("OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
     if (cmd == F_DUPFD) {
         
-        int new_fd = fm_dup(fd);
+        int new_fd = dup(fd);
         if (new_fd == -1) {
             serial_debug("dup(%d) failed\n", fd);
             return -1;
         }
 
         if (new_fd != arg) {
-            if (fm_dup2(new_fd, arg) == -1) {
+            if (dup2(new_fd, arg) == -1) {
                 serial_debug("dup2(%d, %d) failed\n", new_fd, arg);
-                fm_close(new_fd);
+                close(new_fd);
                 return -1;
             }
-            fm_close(new_fd);
+            close(new_fd);
         }
 
         return arg;
@@ -117,11 +122,11 @@ intmax_t strtoimax(const char *nptr, char **endptr, int base) {
     return (intmax_t) strtol(nptr, endptr, base);
 }
 
-pid_t wait3(int *status, int options, struct rusage *rusage) {
-    printf("wait3(%d)\n", options);
-    return 0;
-}
-
+// pid_t wait3(int *status, int options, struct rusage *rusage) {
+//     printf("wait3(%d)\n", options);
+//     return 0;
+// }
+// 
 mode_t umask(mode_t mask) {
     printf("umask(%d)\n", mask);
     return 0;
