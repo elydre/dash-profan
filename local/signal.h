@@ -33,13 +33,12 @@ struct sigaction {
 #define SIG_DFL 0
 
 #define signal(signum, handler) (void) 0
-#define sigsetmask(mask) (void) 0
 #define sigaction(signum, act, oldact) (int) 0
 #define sigfillset(set) (void) 0
 #define sigprocmask(how, set, oldset) (void) 0
 #define sigsuspend(mask) (void) 0
 #define raise(signum) (int) 0
-#define killpg(pgrp, signum) (int) 0
 #define kill(pid, signum) (int) 0
+#define sigemptyset(set) (void) 0
 
 #endif // SIGNAL_H

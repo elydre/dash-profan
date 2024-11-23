@@ -79,11 +79,11 @@ static inline double strtod(const char *nptr, char **endptr)
 #endif
 
 #ifndef HAVE_STRTOIMAX
-#define strtoimax strtoll
+#define strtoimax strtol
 #endif
 
 #ifndef HAVE_STRTOUMAX
-#define strtoumax strtoull
+#define strtoumax strtoul
 #endif
 
 #ifndef HAVE_BSEARCH

@@ -99,11 +99,11 @@ enum {
 #define fm_read ((int (*)(int, void *, uint32_t)) get_func_addr(FMOPEN_LIB_ID, 4))
 #define fm_write ((int (*)(int, void *, uint32_t)) get_func_addr(FMOPEN_LIB_ID, 5))
 #define fm_lseek ((int (*)(int, int, int)) get_func_addr(FMOPEN_LIB_ID, 6))
-#define fm_tell ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 7))
-#define fm_dup2 ((int (*)(int, int)) get_func_addr(FMOPEN_LIB_ID, 8))
-#define fm_dup ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 9))
-#define fm_pipe ((int (*)(int[2])) get_func_addr(FMOPEN_LIB_ID, 10))
-#define fm_isfctf ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 11))
+#define fm_dup2 ((int (*)(int, int)) get_func_addr(FMOPEN_LIB_ID, 7))
+#define fm_dup ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 8))
+#define fm_pipe ((int (*)(int[2])) get_func_addr(FMOPEN_LIB_ID, 9))
+#define fm_isfctf ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 10))
+#define fm_newfd_after ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 11))
 #define fm_declare_child ((int (*)(int)) get_func_addr(FMOPEN_LIB_ID, 12))
 
 #endif

@@ -90,9 +90,9 @@ struct var varinit[] = {
 	{ 0,	VSTRFIXED|VTEXTFIXED|VUNSET,	"MAIL\0",	changemail },
 	{ 0,	VSTRFIXED|VTEXTFIXED|VUNSET,	"MAILPATH\0",	changemail },
 	{ 0,	VSTRFIXED|VTEXTFIXED,		defpathvar,	changepath },
-	{ 0,	VSTRFIXED|VTEXTFIXED,		"PS1=$ ",	0 },
-	{ 0,	VSTRFIXED|VTEXTFIXED,		"PS2=> ",	0 },
-	{ 0,	VSTRFIXED|VTEXTFIXED,		"PS4=+ ",	0 },
+	{ 0,	VSTRFIXED|VTEXTFIXED,		"PS1="CONFIG_DEFAULT_PS1, 0 },
+	{ 0,	VSTRFIXED|VTEXTFIXED,		"PS2="CONFIG_DEFAULT_PS2, 0 },
+	{ 0,	VSTRFIXED|VTEXTFIXED,		"PS4="CONFIG_DEFAULT_PS4, 0 },
 	{ 0,	VSTRFIXED|VTEXTFIXED,		defoptindvar,	getoptsreset },
 #ifdef WITH_LINENO
 	{ 0,	VSTRFIXED|VTEXTFIXED,		linenovar,	0 },
@@ -176,8 +176,8 @@ initvar(void)
 	/*
 	 * PS1 depends on uid
 	 */
-	if (!geteuid())
-		vps1.text = "PS1=# ";
+	// if (!geteuid())
+	// 	vps1.text = "PS1=# ";
 }
 
 /*
