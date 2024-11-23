@@ -101,13 +101,7 @@
 
 // Default prompt and prompt colors
 
-#define CONFIG_DEFAULT_PS1_COL1  "6"
-#define CONFIG_DEFAULT_PS1_COL2a "5"
-#define CONFIG_DEFAULT_PS1_COL2b "97"
-
-#define CONFIG_DEFAULT_PS1  "\e[4"CONFIG_DEFAULT_PS1_COL1"m\e[30m\002dash" \
-        "\e[4"CONFIG_DEFAULT_PS1_COL2a"m\e[3"CONFIG_DEFAULT_PS1_COL1"m\002" \
-        "\e["CONFIG_DEFAULT_PS1_COL2b"m $(pwd) \e[0m\e[3"CONFIG_DEFAULT_PS1_COL2a"m\002\e[97m "
+#define CONFIG_DEFAULT_PS1  "\e[37m(\e[93mdash\e[37m in \e[97m$(pwd)\e[37m) $ \e[0m"
 
 #define CONFIG_DEFAULT_PS2 "\e[97m> \e[0m"
 #define CONFIG_DEFAULT_PS4 "\e[97m+ \e[0m"
