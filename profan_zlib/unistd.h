@@ -35,11 +35,11 @@
 #define STDERR_FILENO 2
 
 #define F_OK 0
-#define R_OK 4
-#define W_OK 2
 #define X_OK 1
+#define W_OK 2
+#define R_OK 4
 
-int access(const char *a, int b);
+int access(const char *pathname, int mode);
 unsigned alarm(unsigned a);
 int chdir(const char *a);
 int chown(const char *a, uid_t b, gid_t c);
@@ -50,13 +50,13 @@ char *ctermid(char *a);
 int dup(int fd);
 int dup2(int fd, int newfd);
 void encrypt(char a[64], int b);
-int execle(const char *fullpath, const char *arg, ...);
-int execl(const char *fullpath, const char *first, ...);
-int execlp(const char *file, const char *arg, ...);
+int execle(const char *fullpath, const char *arg, ...) __attribute__((sentinel));
+int execl(const char *fullpath, const char *first, ...) __attribute__((sentinel));
+int execlp(const char *file, const char *arg, ...) __attribute__((sentinel));
 int execv(const char *fullpath, char *const argv[]);
 int execve(const char *fullpath, char *const argv[], char *const envp[]);
 int execvp(const char *file, char *const argv[]);
-void _exit(int a);
+void _exit(int a) __attribute__((noreturn));
 int fchdir(int a);
 int fchown(int a, uid_t b, gid_t c);
 int fdatasync(int a);
@@ -117,7 +117,7 @@ int ttyname_r(int a, char *b, size_t c);
 useconds_t ualarm(useconds_t a, useconds_t b);
 int unlink(const char *a);
 int usleep(useconds_t usec);
-// pid_t vfork(void);
+pid_t vfork(void);
 #define vfork fork
 ssize_t write(int fd, const void *buf, size_t count);
 
