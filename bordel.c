@@ -4,14 +4,18 @@
 #include <inttypes.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <pwd.h>
 
 #include <profan/filesys.h>
 #include <profan/syscall.h>
 #include <profan.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
+
+void _exit(int a) {
+    exit(a);
+}
 
 int fcntl(int fd, int cmd, ...) {
     va_list ap;
@@ -19,25 +23,15 @@ int fcntl(int fd, int cmd, ...) {
     int arg = va_arg(ap, int);
     va_end(ap);
 
-    serial_debug("OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
+    // serial_debug("OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
     if (cmd == F_DUPFD) {
-        
-        int new_fd = fm_dup(fd);
-        if (new_fd == -1) {
-            serial_debug("dup(%d) failed\n", fd);
+
+        int new_fd = fm_newfd_after(arg);
+
+        if (new_fd < 0)
             return -1;
-        }
 
-        if (new_fd != arg) {
-            if (fm_dup2(new_fd, arg) == -1) {
-                serial_debug("dup2(%d, %d) failed\n", new_fd, arg);
-                fm_close(new_fd);
-                return -1;
-            }
-            fm_close(new_fd);
-        }
-
-        return arg;
+        return dup2(fd, new_fd);
     } else if (cmd == F_SETFD) {
         return 0;
     } else {
@@ -66,7 +60,7 @@ struct stat64 {
 */
 
 int stat64(const char *path, struct stat64 *buf) {
-    serial_debug("OK stat64(%s)\n", path);
+    // serial_debug("OK stat64(%s)\n", path);
 
     buf->st_dev = 0;
     buf->st_ino = 0;
@@ -84,9 +78,9 @@ int stat64(const char *path, struct stat64 *buf) {
 
     char *pwd = getenv("PWD");
     if (pwd == NULL) pwd = "/";
-    char *full_path = assemble_path(pwd, (char *) path);
+    char *full_path = profan_join_path(pwd, (char *) path);
 
-    uint32_t sid = fu_path_to_sid(ROOT_SID, full_path);
+    uint32_t sid = fu_path_to_sid(SID_ROOT, full_path);
     free(full_path);
 
     if (IS_SID_NULL(sid)) {
@@ -112,33 +106,18 @@ int stat64(const char *path, struct stat64 *buf) {
     return 0;    
 }
 
-intmax_t strtoimax(const char *nptr, char **endptr, int base) {
-    serial_debug("strtoimax(%s, %d)\n", nptr, base);
-    return (intmax_t) strtol(nptr, endptr, base);
-}
-
-pid_t wait3(int *status, int options, struct rusage *rusage) {
-    printf("wait3(%d)\n", options);
-    return 0;
-}
+// pid_t wait3(int *status, int options, struct rusage *rusage) {
+//     printf("wait3(%d)\n", options);
+//     return 0;
+// }
 
 mode_t umask(mode_t mask) {
     printf("umask(%d)\n", mask);
     return 0;
 }
 
-int getrlimit(int resource, struct rlimit *rlim) {
-    printf("getrlimit(%d)\n", resource);
-    return 0;
-}
-
 DIR *opendir(const char *name) {
     printf("opendir(%s)\n", name);
-    return NULL;
-}
-
-struct passwd *getpwnam(const char *name) {
-    printf("getpwnam(%s)\n", name);
     return NULL;
 }
 
@@ -164,10 +143,5 @@ int closedir(DIR *dirp) {
 
 int lstat64(const char *path, struct stat64 *buf) {
     printf("lstat64(%s)\n", path);
-    return 0;
-}
-
-uintmax_t strtoumax(const char *nptr, char **endptr, int base) {
-    printf("strtoumax(%s, %d)\n", nptr, base);
     return 0;
 }
