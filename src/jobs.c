@@ -1197,8 +1197,6 @@ waitproc(int block, int *status)
 
 	return err;*/
 
-    serial_debug("waitproc: %d\n", block);
-
     return waitpid(-1, status, block == DOWAIT_BLOCK ? 0 : WNOHANG);
 }
 
