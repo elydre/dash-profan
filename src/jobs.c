@@ -1197,26 +1197,9 @@ waitproc(int block, int *status)
 
 	return err;*/
 
-    int pid, *pids = malloc(sizeof(int) * 100);
-    int count = syscall_process_list_all(pids, 100);
-    int current_pid = syscall_process_pid();
+    serial_debug("waitproc: %d\n", block);
 
-    for (int i = 0; i < count; i++) {
-        pid = pids[i];
-        if (syscall_process_ppid(pid) == current_pid) {
-            ckfree(pids);
-
-            while (syscall_process_state(pid) < 4)
-                syscall_process_sleep(current_pid, 10);
-
-            *status = syscall_process_info(pid, PROCESS_INFO_EXIT_CODE);
-
-            return pid;
-        }
-    }
-    ckfree(pids);
-
-    return -1;
+    return waitpid(-1, status, block == DOWAIT_BLOCK ? 0 : WNOHANG);
 }
 
 /*
