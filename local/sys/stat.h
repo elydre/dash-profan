@@ -35,6 +35,10 @@ struct stat {
     time_t    st_ctime;    /* Heure dernier changement état   */
 };
 
+typedef uint64_t ino64_t;
+typedef int64_t off64_t;
+typedef uint64_t blkcnt64_t;
+
 struct stat64 {
     dev_t     st_dev;      /* Périphérique                    */
     ino64_t   st_ino;      /* Numéro i-nœud                   */
@@ -45,7 +49,7 @@ struct stat64 {
     dev_t     st_rdev;     /* Type périphérique               */
     off64_t   st_size;     /* Taille totale en octets         */
     blksize_t st_blksize;  /* Taille de bloc pour E/S         */
-    blkcnt64_t  st_blocks; /* Nombre de blocs de 512B alloués */
+    blkcnt64_t st_blocks;  /* Nombre de blocs de 512B alloués */
     time_t    st_atime;    /* Heure dernier accès             */
     time_t    st_mtime;    /* Heure dernière modification     */
     time_t    st_ctime;    /* Heure dernier changement état   */

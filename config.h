@@ -100,8 +100,15 @@
 #define _PATH_TTY "/dev/panda"
 
 // Default prompt and prompt colors
-
 #define CONFIG_DEFAULT_PS1  "\e[37m(\e[93mdash\e[37m in \e[97m$(pwd)\e[37m) $ \e[0m"
 
 #define CONFIG_DEFAULT_PS2 "\e[97m> \e[0m"
 #define CONFIG_DEFAULT_PS4 "\e[97m+ \e[0m"
+
+// Misc
+#define PATH_MAX 1023
+#define NAME_MAX 255
+
+#define EWOULDBLOCK EAGAIN
+#define open64 open
+#define vfork fork

@@ -185,7 +185,7 @@ init() {
 	      struct stat64 st1, st2;
 
 	      initvar();
-	      for (envp = __get_environ_ptr() ; *envp ; envp++) {
+	      for (envp = environ ; *envp ; envp++) {
 		      p = endofname(*envp);
 		      if (p != *envp && *p == '=') {
 			      setvareq(*envp, VEXPORT|VTEXTFIXED);
