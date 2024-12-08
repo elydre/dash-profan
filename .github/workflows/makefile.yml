@@ -26,7 +26,6 @@ jobs:
       
     - name: build dash
       run: |
-        bash getlib.sh
         python3 build.py profanOS
 
     - name: Release to GitHub
