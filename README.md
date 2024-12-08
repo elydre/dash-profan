@@ -9,20 +9,17 @@ compliant shell.
 
 ```sh
 # in your profanOS, build the disk
-cd ~/path/to/profanOS
+cd path/to/profanOS
 make clean disk
 
 # go to dash port
-cd ~/path/to/dash
-
-# download extra libs
-sh getlib.sh
+cd path/to/dash
 
 # build dash
 python build.py /path/to/profanOS
 
 # copy the binary to profanOS filesystem
-cp dash ~/path/to/profanOS/out/zapps/fatpath/
+cp dash path/to/profanOS/out/zapps/fatpath/
 ```
 
 *I'm not the author of the original Dash shell, I just ported it to profanOS.*
