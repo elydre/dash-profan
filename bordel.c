@@ -116,11 +116,6 @@ mode_t umask(mode_t mask) {
     return 0;
 }
 
-DIR *opendir(const char *name) {
-    printf("opendir(%s)\n", name);
-    return NULL;
-}
-
 int fstat64(int fd, struct stat64 *buf) {
     printf("fstat64(%d)\n", fd);
     return 0;
@@ -128,16 +123,6 @@ int fstat64(int fd, struct stat64 *buf) {
 
 int setrlimit(int resource, const struct rlimit *rlim) {
     printf("setrlimit(%d)\n", resource);
-    return 0;
-}
-
-struct dirent64 *readdir64(DIR *dirp) {
-    printf("readdir64(%p)\n", dirp);
-    return NULL;
-}
-
-int closedir(DIR *dirp) {
-    printf("closedir(%p)\n", dirp);
     return 0;
 }
 
