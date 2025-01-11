@@ -17,30 +17,6 @@ void _exit(int a) {
     exit(a);
 }
 
-int fcntl(int fd, int cmd, ...) {
-    va_list ap;
-    va_start(ap, cmd);
-    int arg = va_arg(ap, int);
-    va_end(ap);
-
-    // serial_debug("OK fcntl(fd=%d, cmd=%d, arg=%d)\n", fd, cmd, arg);
-    if (cmd == F_DUPFD) {
-
-        int new_fd = fm_newfd_after(arg);
-
-        if (new_fd < 0)
-            return -1;
-
-        return dup2(fd, new_fd);
-    } else if (cmd == F_SETFD) {
-        return 0;
-    } else {
-        serial_debug("Unknown fcntl cmd %d\n", cmd);
-        return -1;
-    }
-}
-
-
 /*
 struct stat64 {
     dev_t     st_dev;      // Périphérique
