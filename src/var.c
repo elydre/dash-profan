@@ -120,6 +120,7 @@ INCLUDE <sys/stat.h>
 INCLUDE "cd.h"
 INCLUDE "output.h"
 INCLUDE "var.h"
+MKINIT char **environ;
 INIT {
 	char **envp;
 	static char ppid[32] = "PPID=";
@@ -127,7 +128,7 @@ INIT {
 	struct stat64 st1, st2;
 
 	initvar();
-	for (envp = __get_environ_ptr() ; *envp ; envp++) {
+	for (envp = environ ; *envp ; envp++) {
 		p = endofname(*envp);
 		if (p != *envp && *p == '=') {
 			setvareq(*envp, VEXPORT|VTEXTFIXED);

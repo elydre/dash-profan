@@ -29,8 +29,8 @@ struct sigaction {
 #define NSIG 64
 #define SIG_SETMASK 0
 
-#define SIG_IGN 1
-#define SIG_DFL 0
+#define SIG_IGN NULL
+#define SIG_DFL NULL
 
 #define signal(signum, handler) (void) 0
 #define sigaction(signum, act, oldact) (int) 0
