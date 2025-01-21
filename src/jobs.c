@@ -72,8 +72,6 @@
 #include "mystring.h"
 #include "system.h"
 
-#include <profan/syscall.h>
-
 /* mode flags for set_curjob */
 #define CUR_DELETE 2
 #define CUR_RUNNING 1
@@ -1169,10 +1167,10 @@ static int dowait(int block, struct job *jp)
 STATIC int
 waitproc(int block, int *status)
 {
-	/*sigset_t oldmask;
 	int flags = block == DOWAIT_BLOCK ? 0 : WNOHANG;
 	int err;
 
+	/* sigset_t oldmask;
 #if JOBS
 	if (jobctl)
 		flags |= WUNTRACED;
@@ -1197,7 +1195,8 @@ waitproc(int block, int *status)
 
 	return err;*/
 
-    return waitpid(-1, status, block == DOWAIT_BLOCK ? 0 : WNOHANG);
+    err = waitpid(-1, status, flags);
+    return err ? err : -!block;
 }
 
 /*

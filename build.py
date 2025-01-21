@@ -13,7 +13,7 @@ LD      = "ld"
 OUTPUT  = "dash"
 
 CFLAGS  = "-m32 -ffreestanding -fno-exceptions -nostdinc -fno-stack-protector -O3 -fno-omit-frame-pointer "
-CFLAGS += f"-Isrc -Ilocal -include config.h -DHAVE_CONFIG_H -DSHELL -DJOBS=0 -I {profan_path}/include/zlibs"
+CFLAGS += f"-Isrc -Ilocal -include config.h -DSHELL -DJOBS=0 -I {profan_path}/include/zlibs"
 
 LDFLAGS = f"-nostdlib -T link.ld -L{profan_path}/out/zlibs -lc"
 
