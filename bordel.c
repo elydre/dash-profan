@@ -54,7 +54,7 @@ int stat64(const char *path, struct stat64 *buf) {
 
     char *pwd = getenv("PWD");
     if (pwd == NULL) pwd = "/";
-    char *full_path = profan_join_path(pwd, (char *) path);
+    char *full_path = profan_path_join(pwd, (char *) path);
 
     uint32_t sid = fu_path_to_sid(SID_ROOT, full_path);
     free(full_path);
