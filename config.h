@@ -91,7 +91,7 @@
 #define WITH_LINENO 0
 
 // Define to system shell path
-#define _PATH_BSHELL "/bin/fatpath/dash.elf"
+#define _PATH_BSHELL "/bin/h/dash.elf"
 
 // Define to devnull device node path
 #define _PATH_DEVNULL "/dev/null"

@@ -19,7 +19,7 @@ cd path/to/dash
 python build.py /path/to/profanOS
 
 # copy the binary to profanOS filesystem
-cp dash path/to/profanOS/out/zapps/fatpath/
+cp dash path/to/profanOS/out/zapps/h/
 ```
 
 *I'm not the author of the original Dash shell, I just ported it to profanOS.*
