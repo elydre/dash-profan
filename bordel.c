@@ -75,7 +75,7 @@ int stat64(const char *path, struct stat64 *buf) {
     }
     buf->st_mode |= 00777;
 
-    buf->st_size = syscall_fs_get_size(NULL, sid);
+    buf->st_size = syscall_fs_get_size(sid);
     buf->st_blksize = 512;
     buf->st_blocks = (buf->st_size + 511) / 512;
 
