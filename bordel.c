@@ -5,7 +5,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 
-#include <profan/filesys.h>
+#include <modules/filesys.h>
 #include <profan/syscall.h>
 #include <profan.h>
 #include <stdlib.h>
